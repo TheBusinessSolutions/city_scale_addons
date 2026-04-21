@@ -12,7 +12,7 @@
     """,
     'author': 'Business Solutions',
     'website': 'https://www.thebusinesssolutions.net',
-    'depends': ['sale', 'product', 'checklist'],
+    'depends': ['sale', 'product', 'smile_checklist'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
