@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_checklist_task_instance_form_inherit" model="ir.ui.view">
+        <field name="name">checklist.task.instance.form.inherit</field>
+        <field name="model">checklist.task.instance</field>
+        <field name="inherit_id" ref="smile_checklist.view_checklist_task_instance_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_manually_completed"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
