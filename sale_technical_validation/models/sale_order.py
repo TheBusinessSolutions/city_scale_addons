@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-# Extends sale.order (States, Buttons, Scale Logic)
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -21,5 +20,12 @@ class SaleOrder(models.Model):
             # Check if at least one product in the order has a scale value
             has_scale_data = any(line.product_id.product_tmpl_id.scale_value for line in order.order_line)
             # Check if checklist has any progress (at least one item checked)
+            # Note: x_checklist_progress_rate is added by the smile_checklist module
             has_checklist_progress = order.x_checklist_progress_rate > 0
             order.is_technical_verified = has_scale_data and has_checklist_progress
+
+    def action_send_to_scale(self):
+        """Changes state to Waiting Scale"""
+        self.write({'state': 'waiting_scale'})
+        # TODO: Add notification logic in Phase 3
+        return True
