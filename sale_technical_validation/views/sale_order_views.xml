@@ -5,15 +5,25 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <!-- Try injecting after the 'Confirm' button which is always present in draft -->
+            <!-- Inject inside the header, but specifically after the 'Confirm' button -->
             <xpath expr="//button[@name='action_confirm']" position="after">
                 <button name="action_send_to_scale" string="Send to Scale" type="object" 
                         class="oe_highlight" 
                         invisible="[('state', '!=', 'draft')]"
                         groups="base.group_user"/>
             </xpath>
+            
+            <!-- Also try adding to the button_box if header fails -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                 <button name="action_send_to_scale" string="Send to Scale" type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-ruler"
+                        invisible="[('state', '!=', 'draft')]"
+                        groups="base.group_user">
+                    <field name="state" invisible="1"/>
+                </button>
+            </xpath>
 
-            <!-- Add Technical Tab -->
             <xpath expr="//page[@name='order_lines']" position="after">
                 <page name="technical_request" string="Technical Request">
                     <group>
