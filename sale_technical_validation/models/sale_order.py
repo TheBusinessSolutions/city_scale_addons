@@ -4,64 +4,79 @@ from odoo.exceptions import UserError
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    # Workflow States
     state = fields.Selection(selection_add=[
         ('waiting_scale', 'Waiting Scale'),
         ('waiting_pricing', 'Waiting Pricing')
     ], ondelete={'waiting_scale': 'set draft', 'waiting_pricing': 'set draft'})
 
-    is_technical_verified = fields.Boolean(
-        string="Technically Verified", 
-        compute='_compute_is_technical_verified', 
-        store=True,
-        help="Checked when Scale data is present and Checklist items are manually verified."
-    )
+    # Native Checklist Fields
+    checklist_template_id = fields.Many2one('sale.checklist.template', string='Checklist Template')
+    checklist_line_ids = fields.One2many('sale.order.checklist.line', 'order_id', string='Validation Tasks')
+    checklist_progress_rate = fields.Float('Progress %', compute='_compute_checklist_progress', store=True)
 
-    @api.depends('order_line.product_id.product_tmpl_id.scale_value', 'x_checklist_progress_rate')
-    def _compute_is_technical_verified(self):
+    @api.onchange('checklist_template_id')
+    def _onchange_checklist_template(self):
+        if self.checklist_template_id:
+            # Clear existing lines
+            self.checklist_line_ids = [(5, 0, 0)]
+            # Copy from template
+            for line in self.checklist_template_id.line_ids:
+                self.checklist_line_ids = [(0, 0, {
+                    'name': line.name,
+                    'is_mandatory': line.is_mandatory,
+                    'sequence': line.sequence,
+                })]
+        else:
+            self.checklist_line_ids = [(5, 0, 0)]
+
+    @api.depends('checklist_line_ids.is_completed')
+    def _compute_checklist_progress(self):
         for order in self:
-            # 1. Check if at least one product has scale data
-            has_scale_data = any(line.product_id.product_tmpl_id.scale_value for line in order.order_line)
-            
-            # 2. Check if checklist progress is 100% (All items marked complete by domain)
-            # Note: Since we linked complete_domain to is_technical_verified, this creates a loop.
-            # To break the loop, we will rely on a manual flag or a simpler check for the button visibility.
-            # For now, let's just check if Scale exists. The Checklist completion will be triggered BY this field.
-            order.is_technical_verified = has_scale_data
+            lines = order.checklist_line_ids
+            if lines:
+                completed = len(lines.filtered(lambda l: l.is_completed))
+                order.checklist_progress_rate = round((completed / len(lines)) * 100.0, 2)
+            else:
+                order.checklist_progress_rate = 0.0
 
+    # Workflow Buttons
     def action_send_to_scale(self):
-        """Sales User: Moves SO to Waiting Scale"""
         self.write({'state': 'waiting_scale'})
         return True
 
     def action_verify_data(self):
-        """Technical Office: Verifies Scale and Marks Checklist as Done"""
         for order in self:
-            # 1. Validate Scale Data
             has_scale = any(line.product_id.product_tmpl_id.scale_value for line in order.order_line)
             if not has_scale:
-                raise UserError(_("Please define 'Scale' value for all products in this quotation."))
-            
-            # 2. Set the field that triggers Checklist Completion
-            # Because our Checklist Tasks have complete_domain [('is_technical_verified', '=', True)],
-            # setting this field to True will automatically mark the tasks as 'Complete' in the Smile module.
-            order.is_technical_verified = True
-            
-            # 3. Optional: Add a chatter message
+                raise UserError(_("Please define 'Scale' value for all products in the quotation."))
             order.message_post(body=_("Technical Data Verified by %s") % self.env.user.name)
-
         return True
 
     def action_send_for_pricing(self):
-        """Technical Office: Moves SO to Waiting Pricing"""
         for order in self:
-            if not order.is_technical_verified:
-                raise UserError(_("Please verify technical data first."))
+            has_scale = any(line.product_id.product_tmpl_id.scale_value for line in order.order_line)
+            if not has_scale:
+                raise UserError(_("Please define 'Scale' value for all products before sending for pricing."))
             
-            # Check if Checklist is actually 100% (Safety check)
-            if order.x_checklist_progress_rate < 100.0:
-                raise UserError(_("Please ensure all mandatory checklist items are completed."))
-
+            # Validate mandatory checklist items
+            mandatory_incomplete = order.checklist_line_ids.filtered(lambda l: l.is_mandatory and not l.is_completed)
+            if mandatory_incomplete:
+                raise UserError(_("Please complete all mandatory checklist items:\n%s") % 
+                                ', '.join(mandatory_incomplete.mapped('name')))
+            
             order.write({'state': 'waiting_pricing'})
-            # TODO: Trigger Product Validation here in Phase 3
             order.message_post(body=_("Sent for Pricing by %s") % self.env.user.name)
         return True
+
+
+class SaleOrderChecklistLine(models.Model):
+    _name = 'sale.order.checklist.line'
+    _description = 'Sale Order Checklist Line'
+    _order = 'sequence'
+
+    order_id = fields.Many2one('sale.order', required=True, ondelete='cascade')
+    name = fields.Char(string='Task', required=True)
+    is_completed = fields.Boolean(string='Completed', default=False)
+    is_mandatory = fields.Boolean(string='Mandatory', default=False)
+    sequence = fields.Integer(default=10)
