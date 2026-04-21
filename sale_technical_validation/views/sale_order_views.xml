@@ -5,8 +5,8 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <!-- Add Button in Header -->
-            <xpath expr="//header" position="inside">
+            <!-- Try injecting after the 'Confirm' button which is always present in draft -->
+            <xpath expr="//button[@name='action_confirm']" position="after">
                 <button name="action_send_to_scale" string="Send to Scale" type="object" 
                         class="oe_highlight" 
                         invisible="[('state', '!=', 'draft')]"
@@ -20,8 +20,6 @@
                         <field name="is_technical_verified"/>
                         <field name="x_checklist_progress_rate" widget="progressbar"/>
                     </group>
-                    <!-- Note: The Smile module injects the checklist button/instances dynamically. 
-                         We rely on that for the actual task list. -->
                 </page>
             </xpath>
         </field>
