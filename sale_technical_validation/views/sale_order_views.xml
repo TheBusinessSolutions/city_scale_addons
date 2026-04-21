@@ -5,24 +5,37 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <!-- Add Stat Button in Button Box (More robust against Smile patching) -->
-            <xpath expr="//div[@name='button_box']" position="inside">
+            <!-- 1. Sales Button: Send to Scale -->
+            <xpath expr="//button[@name='action_confirm']" position="after">
                 <button name="action_send_to_scale" string="Send to Scale" type="object" 
-                        class="oe_stat_button" 
-                        icon="fa-ruler"
+                        class="oe_highlight" 
                         invisible="[('state', '!=', 'draft')]"
-                        groups="base.group_user">
-                    <field name="state" invisible="1"/>
-                </button>
+                        groups="base.group_user"/>
             </xpath>
 
-            <!-- Add Technical Tab -->
+            <!-- 2. Technical Buttons: Verify & Send for Pricing -->
+            <xpath expr="//button[@name='action_send_to_scale']" position="after">
+                <button name="action_verify_data" string="Verify Data" type="object" 
+                        class="oe_highlight" 
+                        invisible="[('state', '!=', 'waiting_scale')]"
+                        groups="sale_technical_validation.group_technical_office"/>
+                        
+                <button name="action_send_for_pricing" string="Send for Pricing" type="object" 
+                        class="oe_highlight" 
+                        invisible="[('state', '!=', 'waiting_scale')]"
+                        groups="sale_technical_validation.group_technical_office"/>
+            </xpath>
+
+            <!-- 3. Technical Tab -->
             <xpath expr="//page[@name='order_lines']" position="after">
                 <page name="technical_request" string="Technical Request">
                     <group>
                         <field name="is_technical_verified"/>
                         <field name="x_checklist_progress_rate" widget="progressbar"/>
                     </group>
+                    <p class="text-muted">
+                        <strong>Note:</strong> Checklist items will automatically mark as "Done" when you click "Verify Data".
+                    </p>
                 </page>
             </xpath>
         </field>
