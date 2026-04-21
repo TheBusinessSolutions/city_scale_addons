@@ -18,6 +18,7 @@
         'security/ir.model.access.csv',
         'views/product_template_views.xml',
         'views/sale_order_views.xml',
+        'data/technical_checklist_data.xml', # Added
     ],
     'installable': True,
     'application': False,
