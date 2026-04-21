@@ -47,8 +47,8 @@
     </record>
 
     <menuitem id="menu_sale_checklist_config"
-              name="Checklist Templates"
-              parent="sale.sale_menu_config"
-              action="action_sale_checklist_template"
-              sequence="50"/>
+            name="Checklist Templates"
+            parent="sale.menu_sale_config"  <!-- Correct Odoo 18 ID -->
+            action="action_sale_checklist_template"
+            sequence="50"/>
 </odoo>
