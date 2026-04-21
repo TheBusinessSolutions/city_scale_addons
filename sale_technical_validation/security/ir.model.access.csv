@@ -1,3 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_sale_order_technical,sale.order.technical,model_sale_order,group_technical_office,1,1,0,0
-access_product_template_technical,product.template.technical,model_product_template,group_technical_office,1,1,0,0
+access_sale_order_technical,sale.order.technical,sale.model_sale_order,group_technical_office,1,1,0,0
+access_product_template_technical,product.template.technical,product.model_product_template,group_technical_office,1,1,0,0
