@@ -9,7 +9,10 @@
                 <page name="technical_info" string="Technical Info">
                     <group>
                         <field name="has_scale"/>
-                        <field name="scale_value" attrs="{'invisible': [('has_scale', '=', False)]}" groups="sale_technical_validation.group_technical_office"/>
+                        <!-- Updated to Odoo 18 syntax -->
+                        <field name="scale_value" 
+                               invisible="[('has_scale', '=', False)]" 
+                               groups="sale_technical_validation.group_technical_office"/>
                     </group>
                 </page>
             </xpath>

@@ -9,7 +9,7 @@
             <xpath expr="//header" position="inside">
                 <button name="action_send_to_scale" string="Send to Scale" type="object" 
                         class="oe_highlight" 
-                        attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        invisible="[('state', '!=', 'draft')]"/>
             </xpath>
 
             <!-- Add Technical Tab -->
@@ -19,8 +19,6 @@
                         <field name="is_technical_verified"/>
                         <field name="x_checklist_progress_rate" widget="progressbar"/>
                     </group>
-                    <!-- The checklist instances will be managed by the Smile module's dynamic injection, 
-                         but we can show the progress here for clarity -->
                 </page>
             </xpath>
         </field>
