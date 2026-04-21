@@ -1,4 +1,4 @@
-# Extends checklist.task.instance (Custom completion logic if needed)from odoo import api, fields, models
+from odoo import api, fields, models
 
 class ChecklistTaskInstance(models.Model):
     _inherit = 'checklist.task.instance'
