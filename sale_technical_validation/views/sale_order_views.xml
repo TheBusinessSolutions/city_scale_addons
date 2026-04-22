@@ -5,26 +5,27 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <!-- Buttons -->
+            
+            <!-- Add Stat Buttons to Button Box -->
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_send_to_scale" string="Send to Scale" type="object" 
                         class="oe_stat_button" icon="fa-paper-plane"
-                        invisible="[('state', '!=', 'draft')]" groups="base.group_user">
-                    <field name="state" invisible="1"/>
+                        invisible="state != 'draft'"
+                        groups="base.group_user">
                 </button>
                 <button name="action_verify_data" string="Verify Scale" type="object" 
                         class="oe_stat_button" icon="fa-check-circle"
-                        invisible="[('state', '!=', 'waiting_scale')]" groups="sale_technical_validation.group_technical_office">
-                    <field name="state" invisible="1"/>
+                        invisible="state != 'waiting_scale'"
+                        groups="sale_technical_validation.group_technical_office">
                 </button>
                 <button name="action_send_for_pricing" string="Send for Pricing" type="object" 
                         class="oe_stat_button" icon="fa-dollar"
-                        invisible="[('state', '!=', 'waiting_scale')]" groups="sale_technical_validation.group_technical_office">
-                    <field name="state" invisible="1"/>
+                        invisible="state != 'waiting_scale'"
+                        groups="sale_technical_validation.group_technical_office">
                 </button>
             </xpath>
 
-            <!-- Technical Tab -->
+            <!-- Add Technical Request Tab -->
             <xpath expr="//page[@name='order_lines']" position="after">
                 <page name="technical_request" string="Technical Request">
                     <group>
@@ -32,10 +33,10 @@
                         <field name="checklist_progress_rate" widget="progressbar"/>
                     </group>
                     <field name="checklist_line_ids">
-                        <list editable="bottom" create="0" edit="1" delete="0">
-                            <field name="sequence" widget="handle" column_invisible="True"/>
-                            <field name="name" readonly="1"/>
-                            <field name="is_mandatory" readonly="1"/>
+                        <list editable="bottom" create="false" edit="true" delete="false">
+                            <field name="sequence" widget="handle" column_invisible="true"/>
+                            <field name="name" readonly="true"/>
+                            <field name="is_mandatory" readonly="true"/>
                             <field name="is_completed"/>
                         </list>
                     </field>
