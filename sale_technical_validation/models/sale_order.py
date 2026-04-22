@@ -18,9 +18,7 @@ class SaleOrder(models.Model):
     @api.onchange('checklist_template_id')
     def _onchange_checklist_template(self):
         if self.checklist_template_id:
-            # Clear existing lines
             self.checklist_line_ids = [(5, 0, 0)]
-            # Copy from template
             for line in self.checklist_template_id.line_ids:
                 self.checklist_line_ids = [(0, 0, {
                     'name': line.name,
@@ -40,7 +38,6 @@ class SaleOrder(models.Model):
             else:
                 order.checklist_progress_rate = 0.0
 
-    # Workflow Buttons
     def action_send_to_scale(self):
         self.write({'state': 'waiting_scale'})
         return True
@@ -59,7 +56,6 @@ class SaleOrder(models.Model):
             if not has_scale:
                 raise UserError(_("Please define 'Scale' value for all products before sending for pricing."))
             
-            # Validate mandatory checklist items
             mandatory_incomplete = order.checklist_line_ids.filtered(lambda l: l.is_mandatory and not l.is_completed)
             if mandatory_incomplete:
                 raise UserError(_("Please complete all mandatory checklist items:\n%s") % 

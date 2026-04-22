@@ -3,5 +3,5 @@ access_sale_order_technical,sale.order.technical,sale.model_sale_order,group_tec
 access_product_template_technical,product.template.technical,product.model_product_template,group_technical_office,1,1,0,0
 access_sale_checklist_template_user,sale.checklist.template.user,sale_technical_validation.model_sale_checklist_template,base.group_user,1,0,0,0
 access_sale_checklist_template_manager,sale.checklist.template.manager,sale_technical_validation.model_sale_checklist_template,sales_team.group_sale_manager,1,1,1,1
-access_sale_checklist_template_line,sale.checklist.template.line,sale_technical_validation.model_sale_checklist_template_line,base.group_user,1,0,0,0
+access_sale_checklist_template_line,sale.checklist.template.line,sale_technical_validation.model_sale_checklist_template_line,sales_team.group_sale_manager,1,1,1,1
 access_sale_order_checklist_line,sale.order.checklist.line,sale_technical_validation.model_sale_order_checklist_line,base.group_user,1,1,1,1

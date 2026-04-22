@@ -1,58 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <!-- Checklist Template List View -->
-    <record id="view_sale_checklist_template_list" model="ir.ui.view">
-        <field name="name">sale.checklist.template.list</field>
-        <field name="model">sale.checklist.template</field>
-        <field name="arch" type="xml">
-            <list>
-                <field name="name"/>
-                <field name="active" widget="boolean_toggle"/>
-            </list>
-        </field>
-    </record>
-
-    <!-- Checklist Template Form View -->
-    <record id="view_sale_checklist_template_form" model="ir.ui.view">
-        <field name="name">sale.checklist.template.form</field>
-        <field name="model">sale.checklist.template</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
-                    <div class="oe_title">
-                        <label for="name"/>
-                        <h1><field name="name" placeholder="e.g. Technical Validation Checklist"/></h1>
-                    </div>
-                    <group>
-                        <field name="active" widget="boolean_toggle"/>
-                    </group>
-                    <notebook>
-                        <page string="Checklist Items">
-                            <field name="line_ids">
-                                <list editable="bottom">
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="name"/>
-                                    <field name="is_mandatory"/>
-                                </list>
-                            </field>
-                        </page>
-                    </notebook>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <!-- Action -->
-    <record id="action_sale_checklist_template" model="ir.actions.act_window">
-        <field name="name">Checklist Templates</field>
-        <field name="res_model">sale.checklist.template</field>
-        <field name="view_mode">list,form</field>
-    </record>
-
-    <!-- Menu Item - Fixed Parent ID -->
-    <menuitem id="menu_sale_checklist_config"
-              name="Checklist Templates"
-              parent="sale.menu_sale_config"
-              action="action_sale_checklist_template"
-              sequence="50"/>
-</odoo>
+<!-- Checklist Template Form View -->
+<record id="view_sale_checklist_template_form" model="ir.ui.view">
+    <field name="name">sale.checklist.template.form</field>
+    <field name="model">sale.checklist.template</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <div class="oe_title">
+                    <label for="name"/>
+                    <h1><field name="name" placeholder="e.g. Technical Validation Checklist"/></h1>
+                </div>
+                <group>
+                    <field name="active" widget="boolean_toggle"/>
+                </group>
+                <notebook>
+                    <page string="Checklist Items">
+                        <field name="line_ids" context="{'default_is_mandatory': False}">
+                            <list editable="bottom" create="1" edit="1" delete="1">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <field name="is_mandatory"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+    </field>
+</record>

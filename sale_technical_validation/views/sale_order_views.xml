@@ -32,7 +32,7 @@
                         <field name="checklist_progress_rate" widget="progressbar"/>
                     </group>
                     <field name="checklist_line_ids">
-                        <list editable="bottom">
+                        <list editable="bottom" create="0" edit="1" delete="0">
                             <field name="sequence" widget="handle" column_invisible="True"/>
                             <field name="name" readonly="1"/>
                             <field name="is_mandatory" readonly="1"/>
