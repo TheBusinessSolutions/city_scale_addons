@@ -5,46 +5,61 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            
-            <!-- Add Stat Buttons to Button Box -->
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_send_to_scale" string="Send to Scale" type="object" 
                         class="oe_stat_button" icon="fa-paper-plane"
-                        invisible="state != 'draft'"
-                        groups="base.group_user">
+                        invisible="state != 'draft'" groups="base.group_user">
                 </button>
                 <button name="action_verify_data" string="Verify Scale" type="object" 
                         class="oe_stat_button" icon="fa-check-circle"
-                        invisible="state != 'waiting_scale'"
-                        groups="sale_technical_validation.group_technical_office">
+                        invisible="state != 'waiting_scale'" groups="sale_technical_validation.group_technical_office">
                 </button>
                 <button name="action_send_for_pricing" string="Send for Pricing" type="object" 
                         class="oe_stat_button" icon="fa-dollar"
-                        invisible="state != 'waiting_scale'"
-                        groups="sale_technical_validation.group_technical_office">
+                        invisible="state != 'waiting_scale'" groups="sale_technical_validation.group_technical_office">
                 </button>
             </xpath>
 
-            <!-- Add Technical Request Tab -->
-            <xpath expr="//page[@name='order_lines']" position="after">
-                <page name="technical_request" string="Technical Request">
-                    <group>
-                        <field name="checklist_template_id"/>
-                        <field name="checklist_progress_rate" widget="progressbar"/>
-                    </group>
-                    <field name="checklist_line_ids">
-                        <list editable="bottom" create="false" edit="true" delete="false">
-                            <field name="sequence" widget="handle" column_invisible="true"/>
-                            <field name="name" readonly="true"/>
-                            <field name="is_mandatory" readonly="true"/>
-                            <field name="is_completed"/>
-                        </list>
-                    </field>
-                    <p class="text-muted mt-2">
-                        <i class="fa fa-info-circle"/> Checklist tasks must be checked manually. Mandatory items are required before sending for pricing.
-                    </p>
-                </page>
-            </xpath>
+            <!-- Replace the previous xpath for the page with this one -->
+			<xpath expr="//notebook" position="inside">
+				<page name="technical_request" string="Technical Request" groups="sale_technical_validation.group_technical_office">
+					<group>
+						<field name="checklist_template_id"/>
+						<field name="checklist_progress_rate" widget="progressbar"/>
+					</group>
+					<field name="checklist_line_ids">
+						<list editable="bottom" create="false" edit="true" delete="false">
+							<field name="sequence" widget="handle" column_invisible="true"/>
+							<field name="name" readonly="true" required="1"/>
+							<field name="is_mandatory" readonly="true"/>
+							<field name="is_completed"/>
+						</list>
+					</field>
+					<p class="text-muted mt-2">
+						<i class="fa fa-info-circle"/> Checklist tasks are auto-populated from the template. Mandatory items must be checked before sending for pricing.
+					</p>
+				</page>
+			</xpath>
+			
+			<xpath expr="//div[@name='button_box']" position="before">
+				<!-- Add buttons to Header instead of Button Box for better visibility -->
+				<button name="action_send_to_scale" string="Send to Scale" type="object" 
+						class="oe_highlight" 
+						invisible="state != 'draft'" groups="base.group_user"/>
+						
+				<button name="action_verify_data" string="Verify Scale" type="object" 
+						class="oe_highlight" 
+						invisible="state != 'waiting_scale'" groups="sale_technical_validation.group_technical_office"/>
+						
+				<button name="action_send_for_pricing" string="Send for Pricing" type="object" 
+						class="oe_highlight" 
+						invisible="state != 'waiting_scale'" groups="sale_technical_validation.group_technical_office"/>
+						
+				<!-- NEW BUTTON: Complete Pricing -->
+				<button name="action_complete_pricing" string="Complete Pricing" type="object" 
+						class="oe_highlight" 
+						invisible="state != 'waiting_pricing'" groups="sale_technical_validation.group_technical_office"/>
+			</xpath>
         </field>
     </record>
 </odoo>

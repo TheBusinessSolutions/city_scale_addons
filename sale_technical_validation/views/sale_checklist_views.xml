@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Checklist Template: List View -->
     <record id="view_sale_checklist_template_list" model="ir.ui.view">
         <field name="name">sale.checklist.template.list</field>
         <field name="model">sale.checklist.template</field>
@@ -12,7 +11,6 @@
         </field>
     </record>
 
-    <!-- Checklist Template: Form View -->
     <record id="view_sale_checklist_template_form" model="ir.ui.view">
         <field name="name">sale.checklist.template.form</field>
         <field name="model">sale.checklist.template</field>
@@ -42,14 +40,12 @@
         </field>
     </record>
 
-    <!-- Window Action -->
     <record id="action_sale_checklist_template" model="ir.actions.act_window">
         <field name="name">Checklist Templates</field>
         <field name="res_model">sale.checklist.template</field>
         <field name="view_mode">list,form</field>
     </record>
 
-    <!-- Menu Item -->
     <menuitem id="menu_sale_checklist_config"
               name="Checklist Templates"
               parent="sale.menu_sale_config"
